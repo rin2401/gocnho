@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>Love</title>
+    </head>
+    <body>
+        <img width="100px" height="100px" src="https://scontent.fsgn2-8.fna.fbcdn.net/v/t39.30808-6/431705467_1815663805567356_427957725423605513_n.jpg?_nc_cat=102&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGzujHvVo7BxN1HCB92g1xth-cYFMxHN8iH5xgUzEc3yEzMd31kETIfIva2c4FrgWw92YsfIC1wp7BKt5U7OSdn&_nc_ohc=qt_lQaUXO1kQ7kNvgGANF0B&_nc_ht=scontent.fsgn2-8.fna&oh=00_AfCOKCpcIMXGzIU2Db_q0rqioSkxGa3zMtrT1epvHTdSCg&oe=663291B8">
+        <img width="100px" height="100px" src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/431758289_7285433334877807_4223077408508619244_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeF6of9zQPagVD_N3m3cs01yhAFfcMgiDnaEAV9wyCIOdiyj3S2mEwudyrn54T6mDJKncUG_7q7RoWRLGmd-ZjRr&_nc_ohc=xchT3Nfcr8kQ7kNvgFs1zym&_nc_ht=scontent.fsgn2-10.fna&oh=00_AfBVeRhet8zey7uwaj9igF4jWhdaqec0kYH6poaqW-osBg&oe=66327830">
+        <div id="time">
+            100 ngày 0 giờ 0 phút 0 giây
+        </div>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <script>
+        let firstDate = new Date('2024-02-11T00:00:00');
+
+        function updateTime() {
+            let now = new Date();
+            
+            let miliseconds = now - firstDate;
+            days = Math.floor(miliseconds / (1000 * 60 * 60 * 24));
+            hours = Math.floor(miliseconds / (1000 * 60 * 60) % 24);
+            minutes =  Math.floor(miliseconds / (1000 * 60) % 60);
+            seconds = Math.floor(miliseconds / 1000 % 60)
+
+            $("#time").html(days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây");
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000); 
+    </script>
+</html>
