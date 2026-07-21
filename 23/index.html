@@ -57,6 +57,9 @@
     box-shadow:0 8px 20px rgba(201,24,74,.5);transition:transform .15s;}
   .btn:hover{transform:translateY(-3px) scale(1.02);}
   .btn:active{transform:translateY(0);}
+  .btn.alt{background:linear-gradient(135deg,#ffd76a,#ff9e3d);color:#5a2e00;
+    box-shadow:0 8px 20px rgba(255,158,61,.5);}
+  .winbtns{display:flex;flex-direction:column;gap:10px;align-items:center;}
 
   /* Thanh quỹ */
   .topbar{display:flex;justify-content:space-between;align-items:center;
@@ -130,12 +133,15 @@
     <h1>Yêu em nhiều 💖</h1>
     <div class="bigfund">Tổng quỹ yêu thương:<br><span id="finalFund">0</span>đ 🧧</div>
     <p id="winMsg"></p>
-    <button class="btn" onclick="location.reload()">Chơi lại 🔄</button>
+    <div class="winbtns">
+      <button class="btn alt" id="musicBtn" onclick="toggleMusic()">🎵 Bật nhạc</button>
+      <button class="btn" onclick="location.reload()">Chơi lại 🔄</button>
+    </div>
   </div>
 
 </div>
 <div id="fx"></div>
-<div id="bgm" aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;"></div>
+<div id="bgm" aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:320px;height:180px;overflow:hidden;"><div id="ytplayer"></div></div>
 
 <script>
 /* =======================================================================
@@ -237,6 +243,7 @@ function startGame(){
   document.getElementById("qtotal").textContent = QUESTIONS.length;
   document.getElementById("start").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
+  primeBgm();   // "mở khóa" âm thanh ngay trong cú chạm Bắt đầu
   render();
 }
 
@@ -296,17 +303,53 @@ function showWin(){
   playBackgroundSong();
 }
 
-/* Nhạc nền phát khi hoàn thành hết câu hỏi */
-function playBackgroundSong(){
-  const VIDEO_ID = "Hx4m4XqFRik";
-  const bgm = document.getElementById("bgm");
-  if (!bgm || bgm.dataset.playing) return;
-  bgm.dataset.playing = "1";
-  bgm.innerHTML =
-    '<iframe width="1" height="1" frameborder="0" allow="autoplay" ' +
-    'src="https://www.youtube.com/embed/' + VIDEO_ID +
-    '?autoplay=1&loop=1&playlist=' + VIDEO_ID + '&controls=0"></iframe>';
+/* =========== Nhạc nền (YouTube IFrame API) =========== */
+const BGM_VIDEO_ID = "Hx4m4XqFRik";
+let ytPlayer = null, ytReady = false, wantPlay = false, primed = false;
+
+/* YouTube gọi hàm này khi thư viện API tải xong */
+function onYouTubeIframeAPIReady(){
+  ytPlayer = new YT.Player('ytplayer', {
+    width: '320', height: '180',
+    videoId: BGM_VIDEO_ID,
+    playerVars: { autoplay:0, controls:0, loop:1, playlist:BGM_VIDEO_ID, playsinline:1, rel:0 },
+    events: {
+      onReady: function(){ ytReady = true; if (wantPlay) startBgm(); }
+    }
+  });
 }
+
+/* Phát 1 nhịp khi đang tắt tiếng để trình duyệt cho phép phát tiếng về sau */
+function primeBgm(){
+  if (primed || !ytPlayer || !ytReady) return;
+  primed = true;
+  try {
+    ytPlayer.mute();
+    ytPlayer.playVideo();
+    setTimeout(function(){ try { ytPlayer.pauseVideo(); ytPlayer.seekTo(0); } catch(e){} }, 350);
+  } catch(e){}
+}
+
+function startBgm(){
+  if (!ytPlayer || !ytReady){ wantPlay = true; return; }
+  try { ytPlayer.unMute(); ytPlayer.setVolume(55); ytPlayer.playVideo(); } catch(e){}
+  const b = document.getElementById("musicBtn");
+  if (b) b.textContent = "🔊 Đang phát — Tắt nhạc";
+}
+
+function stopBgm(){
+  if (ytPlayer && ytReady){ try { ytPlayer.pauseVideo(); } catch(e){} }
+  const b = document.getElementById("musicBtn");
+  if (b) b.textContent = "🎵 Bật nhạc";
+}
+
+function toggleMusic(){
+  if (!ytPlayer || !ytReady){ wantPlay = true; return; }
+  if (ytPlayer.getPlayerState() === 1) stopBgm(); else startBgm();
+}
+
+/* Gọi khi hoàn thành hết câu hỏi */
+function playBackgroundSong(){ startBgm(); }
 
 /* Hiệu ứng chữ hiện ra từng chữ như đang viết thư */
 function typeLetter(el, text){
@@ -359,5 +402,6 @@ function moneyRain(count){
   }
 })();
 </script>
+<script src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
