@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎂 Sinh Nhật Min Thư iuu 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --pink:#ff5c8a; --deep:#c9184a; --gold:#ffd166; --cream:#fff7fb;
+  }
+  body{
+    font-family:"Baloo 2",-apple-system,"Segoe UI",Roboto,sans-serif;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,209,102,.35), transparent 45%),
+      radial-gradient(circle at 85% 25%, rgba(162,140,209,.4), transparent 45%),
+      linear-gradient(135deg,#ff9a9e 0%,#ff6a9c 45%,#c9184a 100%);
+    min-height:100vh;display:flex;align-items:center;justify-content:center;
+    padding:16px;overflow:hidden;color:#4a0d22;position:relative;
+  }
+
+  /* Trang trí nền: bóng bay bay lên */
+  .deco{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+  .balloon{position:absolute;bottom:-120px;font-size:2.4rem;animation:rise linear infinite;opacity:.85;}
+  @keyframes rise{to{transform:translateY(-115vh) rotate(8deg);}}
+
+  /* Dây cờ */
+  .bunting{position:fixed;top:0;left:0;width:100%;height:34px;z-index:0;display:flex;justify-content:center;gap:2px;}
+  .flag{width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-top:22px solid var(--gold);filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));}
+  .flag:nth-child(3n+1){border-top-color:#ffd166;}
+  .flag:nth-child(3n+2){border-top-color:#8ecae6;}
+  .flag:nth-child(3n){border-top-color:#fff;}
+
+  .wrap{width:100%;max-width:540px;text-align:center;position:relative;z-index:3;}
+  .card{
+    background:rgba(255,255,255,.95);border-radius:26px;padding:30px 24px;
+    box-shadow:0 20px 50px rgba(120,0,40,.4);border:3px solid rgba(255,255,255,.7);
+    position:relative;
+  }
+  .card::before{content:"🎂";position:absolute;top:-26px;left:50%;transform:translateX(-50%);
+    font-size:2.6rem;filter:drop-shadow(0 3px 4px rgba(0,0,0,.2));}
+
+  h1{font-family:"Dancing Script",cursive;font-size:2.4rem;color:var(--deep);line-height:1.15;margin:14px 0 4px;}
+  .name{font-family:"Dancing Script",cursive;font-size:2.9rem;color:var(--pink);
+    text-shadow:0 2px 0 #fff,0 4px 10px rgba(201,24,74,.3);}
+  .sub{color:#7a2540;font-size:1rem;margin:14px 0 22px;line-height:1.55;}
+
+  /* Ảnh đôi ở màn bắt đầu */
+  .photo{width:100%;max-width:340px;aspect-ratio:4/3;object-fit:cover;
+    border-radius:20px;display:block;margin:16px auto 4px;border:4px solid #fff;
+    box-shadow:0 10px 26px rgba(201,24,74,.35);}
+
+  .btn{font-family:"Baloo 2";background:linear-gradient(135deg,#ff8fb1,#c9184a);color:#fff;border:none;
+    padding:14px 34px;font-size:1.1rem;border-radius:40px;cursor:pointer;font-weight:800;letter-spacing:.3px;
+    box-shadow:0 8px 20px rgba(201,24,74,.5);transition:transform .15s;}
+  .btn:hover{transform:translateY(-3px) scale(1.02);}
+  .btn:active{transform:translateY(0);}
+
+  /* Thanh quỹ */
+  .topbar{display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(135deg,#fff0f5,#ffe3ec);border-radius:18px;padding:12px 18px;margin-bottom:18px;
+    font-weight:800;color:var(--deep);box-shadow:inset 0 0 0 2px rgba(255,209,102,.6);}
+  .fund{font-size:1.1rem;}
+  .qnum{font-size:.85rem;color:#7a2540;background:#fff;padding:4px 10px;border-radius:20px;}
+
+  .qtext{font-size:1.3rem;font-weight:700;margin:4px 0 22px;line-height:1.5;color:#4a0d22;}
+  .answers{display:flex;flex-direction:column;gap:13px;}
+  .ans{font-family:"Baloo 2";background:#fff;border:2px solid #ffc2cf;border-radius:16px;padding:15px;
+    font-size:1.02rem;cursor:pointer;transition:all .15s;color:#4a0d22;text-align:left;font-weight:500;}
+  .ans:hover{border-color:var(--pink);transform:translateY(-2px);box-shadow:0 6px 14px rgba(255,92,138,.25);}
+  .ans.correct{background:#d8f5d0;border-color:#43a047;font-weight:700;}
+  .ans.wrong{background:#ffd6d6;border-color:#e53935;}
+  .ans.disabled{pointer-events:none;opacity:.9;}
+
+  .feedback{margin-top:18px;min-height:24px;font-weight:800;font-size:1.05rem;}
+  .feedback.good{color:#2e7d32;}
+  .feedback.bad{color:#c62828;}
+  .nextbtn{margin-top:18px;}
+
+  #winMsg{font-family:"Dancing Script",cursive;font-size:1.55rem;line-height:1.55;margin:16px auto 22px;
+    max-width:420px;white-space:pre-line;color:#4a0d22;font-weight:700;text-align:left;min-height:210px;}
+  .caret{display:inline-block;width:2px;height:1em;background:var(--deep);margin-left:2px;
+    vertical-align:-2px;animation:blink .7s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+  .bigfund{font-size:1.5rem;color:var(--deep);font-weight:800;margin:12px 0;
+    background:linear-gradient(135deg,#fff0f5,#ffe3ec);border-radius:16px;padding:14px;}
+
+  .hidden{display:none;}
+
+  /* Mưa lì xì / confetti */
+  #fx{position:fixed;inset:0;pointer-events:none;z-index:2;overflow:hidden;}
+  .money{position:absolute;font-size:1.9rem;top:-40px;animation:drop linear forwards;}
+  @keyframes drop{to{transform:translateY(112vh) rotate(360deg);opacity:.9;}}
+
+  @media(max-width:400px){ h1{font-size:2rem;} .name{font-size:2.4rem;} .qtext{font-size:1.15rem;} }
+</style>
+</head>
+<body>
+
+<div class="bunting" id="bunting"></div>
+<div class="deco" id="deco"></div>
+
+<div class="wrap">
+
+  <!-- Màn bắt đầu -->
+  <div id="start" class="card">
+    <h1>Chúc Mừng Sinh Nhật</h1>
+    <div class="name">Min Thư iuu 🥰</div>
+    <img class="photo" src="1.jpeg" alt="Hai đứa mình 💕">
+    <p class="sub">Trả lời đúng những câu hỏi về hai đứa mình để nhận lì xì đỏ 🧧<br>Gom đủ quỹ yêu thương và mở món quà bí mật nha! 💝</p>
+    <button class="btn" onclick="startGame()">Bắt đầu 🎉</button>
+  </div>
+
+  <!-- Màn chơi -->
+  <div id="game" class="card hidden">
+    <div class="topbar">
+      <span class="fund">🧧 Quỹ: <span id="fund">0</span>đ</span>
+      <span class="qnum">Câu <span id="qnum">1</span>/<span id="qtotal">0</span></span>
+    </div>
+    <div class="qtext" id="qtext"></div>
+    <div class="answers" id="answers"></div>
+    <div class="feedback" id="feedback"></div>
+    <button class="btn nextbtn hidden" id="nextBtn" onclick="nextQuestion()">Câu tiếp theo ➡</button>
+  </div>
+
+  <!-- Màn kết thúc -->
+  <div id="win" class="card hidden">
+    <h1>Yêu em nhiều 💖</h1>
+    <div class="bigfund">Tổng quỹ yêu thương:<br><span id="finalFund">0</span>đ 🧧</div>
+    <p id="winMsg"></p>
+    <button class="btn" onclick="location.reload()">Chơi lại 🔄</button>
+  </div>
+
+</div>
+<div id="fx"></div>
+<div id="bgm" aria-hidden="true" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden;"></div>
+
+<script>
+/* =======================================================================
+   👇 CHỈNH Ở ĐÂY: câu hỏi về hai bạn.
+   - Mỗi câu có: question (câu hỏi), options (4 đáp án),
+     correct (số thứ tự đáp án đúng: 0,1,2,3), reward (số tiền lì xì).
+   ======================================================================= */
+const NAME = "Min Thư iuu";
+
+const QUESTIONS = [
+  {
+    question: "Lần đầu tiên tụi mình gặp nhau ở đâu?",
+    options: ["Ở trường học 🏫", "Nhà cô giáo 👩‍🏫", "Quán cà phê ☕", "Trên mạng 💻"],
+    correct: 1,
+    reward: 100000
+  },
+  {
+    question: "Bộ phim đầu tiên hai đứa đi xem chung là phim gì?",
+    options: ["Mai 🎬", "Đào, Phở và Piano 🎹", "Nhà Bà Nữ 🏠", "Lật Mặt 🎭"],
+    correct: 0,
+    reward: 150000
+  },
+  {
+    question: "Lần đầu tiên anh chở Min Thư iuu đi chơi bằng xe gì?",
+    options: ["Xe máy 🛵", "Xe đạp 🚲", "Ô tô 🚗", "Xe buýt 🚌"],
+    correct: 0,
+    reward: 200000
+  },
+  {
+    question: "Quán ăn yêu thích của tụi mình là quán nào?",
+    options: ["Haidilao 🍲", "Chang Kang Kung 🥘", "Gogi House 🥩", "Kichi Kichi 🍜"],
+    correct: 1,
+    reward: 250000
+  },
+  {
+    question: "Lần đầu tiên hai đứa nắm tay nhau ở đâu?",
+    options: ["Công viên 🌳", "Cầu gỗ lim 🌉", "Rạp phim 🎥", "Bờ hồ 🌊"],
+    correct: 1,
+    reward: 300000
+  },
+  {
+    question: "Lần đầu tiên hai đứa cùng xem pháo hoa ở đâu?",
+    options: ["Đà Nẵng 🎇", "Huế 🎆", "Hà Nội 🏙️", "Sài Gòn 🌃"],
+    correct: 1,
+    reward: 350000
+  },
+  {
+    question: "Điều anh yêu nhất ở em là gì?",
+    options: ["Nụ cười của em 😊", "Sự dịu dàng 🥰", "Là chính em 💖", "Tất cả mọi thứ ✨"],
+    correct: 2,
+    reward: 400000
+  },
+  {
+    question: "Ngày anh tỏ tình với em là ngày nào?",
+    options: ["17/03", "21/03", "24/03", "28/03"],
+    correct: 2,
+    reward: 400000
+  },
+  {
+    question: "Tính đến hôm nay, tụi mình đã yêu nhau được bao nhiêu ngày rồi?",
+    options: ["879 ngày", "888 ngày", "892 ngày", "905 ngày"],
+    correct: 2,
+    reward: 400000
+  },
+  {
+    question: "Trong mắt anh, Min Thư iuu là gì của anh?",
+    options: ["Nửa kia của cuộc đời anh 💑", "Người anh muốn cưới 💍", "Cả thế giới của anh 🌏", "Tất cả những điều trên 💖"],
+    correct: 3,
+    reward: 450000
+  },
+  {
+    question: "Điều anh mong nhất trong tương lai của hai đứa là gì?",
+    options: ["Cùng nhau đi khắp thế gian 🌍", "Một mái nhà nhỏ và em 🏡", "Được cưới em 👰", "Tất cả, miễn là có em 💑"],
+    correct: 3,
+    reward: 500000
+  },
+  {
+    question: "Anh muốn ở bên cạnh Min Thư iuu trong bao lâu?",
+    options: ["Thêm vài năm nữa", "Đến khi già đi 👵👴", "Cả cuộc đời này 💍", "Mãi mãi và hơn thế nữa ♾️💖"],
+    correct: 3,
+    reward: 500000
+  }
+];
+
+/* Lời chúc cuối game — chỉnh thoải mái. {name} = tên. */
+const FINAL_MESSAGE =
+  "Gửi {name} của anh,\n\n" +
+  "Chúc em iuu sinh nhật thật vui, tuổi mới nhiều sức khỏe, luôn xinh đẹp và hạnh phúc bên anh. " +
+  "Cảm ơn em đã luôn ở cạnh, cùng anh đi qua từng ngày thương nhớ. Anh hứa sẽ nắm tay em thật chặt, hôm nay và cả những ngày sau này nữa nhé! 💕\n\n" +
+  "Yêu em nhiều nhất trên đời 💖🌹" +
+  "\n\nLove you,\n" +
+  "anh Rin iuu 💖";
+/* ===================================================================== */
+
+let idx = 0, fund = 0;
+function fmt(n){ return n.toLocaleString("vi-VN"); }
+
+function startGame(){
+  document.getElementById("qtotal").textContent = QUESTIONS.length;
+  document.getElementById("start").classList.add("hidden");
+  document.getElementById("game").classList.remove("hidden");
+  render();
+}
+
+function render(){
+  const q = QUESTIONS[idx];
+  document.getElementById("qnum").textContent = idx + 1;
+  document.getElementById("qtext").textContent = q.question;
+  const fb = document.getElementById("feedback");
+  fb.textContent = ""; fb.className = "feedback";
+  document.getElementById("nextBtn").classList.add("hidden");
+
+  const box = document.getElementById("answers");
+  box.innerHTML = "";
+  q.options.forEach((opt, i) => {
+    const el = document.createElement("div");
+    el.className = "ans";
+    el.textContent = opt;
+    el.onclick = () => choose(i, el);
+    box.appendChild(el);
+  });
+}
+
+function choose(i, el){
+  const q = QUESTIONS[idx];
+  const all = document.querySelectorAll(".ans");
+  all.forEach(a => a.classList.add("disabled"));
+  const fb = document.getElementById("feedback");
+
+  if (i === q.correct){
+    el.classList.add("correct");
+    fund += q.reward;
+    document.getElementById("fund").textContent = fmt(fund);
+    fb.textContent = `Chính xác! +${fmt(q.reward)}đ lì xì 🧧`;
+    fb.className = "feedback good";
+    moneyRain(16);
+  } else {
+    el.classList.add("wrong");
+    all[q.correct].classList.add("correct");
+    fb.textContent = "Hí hí, đáp án đúng là ô màu xanh nè 💕";
+    fb.className = "feedback bad";
+  }
+  document.getElementById("nextBtn").classList.remove("hidden");
+}
+
+function nextQuestion(){
+  idx++;
+  if (idx >= QUESTIONS.length) return showWin();
+  render();
+}
+
+function showWin(){
+  document.getElementById("game").classList.add("hidden");
+  document.getElementById("win").classList.remove("hidden");
+  document.getElementById("finalFund").textContent = fmt(fund);
+  typeLetter(document.getElementById("winMsg"), FINAL_MESSAGE.replace("{name}", NAME));
+  moneyRain(70);
+  playBackgroundSong();
+}
+
+/* Nhạc nền phát khi hoàn thành hết câu hỏi */
+function playBackgroundSong(){
+  const VIDEO_ID = "Hx4m4XqFRik";
+  const bgm = document.getElementById("bgm");
+  if (!bgm || bgm.dataset.playing) return;
+  bgm.dataset.playing = "1";
+  bgm.innerHTML =
+    '<iframe width="1" height="1" frameborder="0" allow="autoplay" ' +
+    'src="https://www.youtube.com/embed/' + VIDEO_ID +
+    '?autoplay=1&loop=1&playlist=' + VIDEO_ID + '&controls=0"></iframe>';
+}
+
+/* Hiệu ứng chữ hiện ra từng chữ như đang viết thư */
+function typeLetter(el, text){
+  el.innerHTML = '<span class="typed"></span><span class="caret"></span>';
+  const typed = el.querySelector(".typed");
+  const caret = el.querySelector(".caret");
+  let i = 0;
+  (function step(){
+    if (i >= text.length){ setTimeout(function(){ if(caret) caret.remove(); }, 1500); return; }
+    const ch = text.charAt(i++);
+    typed.textContent += ch;
+    let delay = 42 + Math.random()*38;            // nhịp gõ hơi ngẫu nhiên cho tự nhiên
+    if (ch === "\n") delay = 380;                 // xuống dòng thì nghỉ lâu hơn
+    else if (".!?".indexOf(ch) > -1) delay = 300; // hết câu nghỉ một nhịp
+    else if (ch === ",") delay = 200;
+    setTimeout(step, delay);
+  })();
+}
+
+function moneyRain(count){
+  const fx = document.getElementById("fx");
+  const icons = ["🧧","💰","💵","💖","🎊"];
+  for (let k=0;k<count;k++){
+    const m = document.createElement("div");
+    m.className = "money";
+    m.textContent = icons[Math.floor(Math.random()*icons.length)];
+    m.style.left = Math.random()*100 + "vw";
+    const dur = 2 + Math.random()*2;
+    m.style.animationDuration = dur + "s";
+    m.style.animationDelay = (Math.random()*0.5) + "s";
+    fx.appendChild(m);
+    setTimeout(()=>m.remove(), (dur+0.6)*1000);
+  }
+}
+
+/* Trang trí: dây cờ + bóng bay */
+(function decorate(){
+  const bunting = document.getElementById("bunting");
+  for (let i=0;i<24;i++){ const f=document.createElement("div"); f.className="flag"; bunting.appendChild(f); }
+  const deco = document.getElementById("deco");
+  const balloons = ["🎈","🎈","🎈","🩷","💜","🎈"];
+  for (let i=0;i<8;i++){
+    const b=document.createElement("div"); b.className="balloon";
+    b.textContent=balloons[Math.floor(Math.random()*balloons.length)];
+    b.style.left=(5+Math.random()*90)+"vw";
+    b.style.animationDuration=(9+Math.random()*8)+"s";
+    b.style.animationDelay=(Math.random()*8)+"s";
+    b.style.fontSize=(1.8+Math.random()*1.6)+"rem";
+    deco.appendChild(b);
+  }
+})();
+</script>
+</body>
+</html>
