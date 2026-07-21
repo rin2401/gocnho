@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎂 Sinh Nhật Min Thư iuu 🎉</title>
+<title>Sinh Nhật Min Thư iuu 🎉</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎂</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 <style>
@@ -17,8 +18,8 @@
       radial-gradient(circle at 15% 15%, rgba(255,209,102,.35), transparent 45%),
       radial-gradient(circle at 85% 25%, rgba(162,140,209,.4), transparent 45%),
       linear-gradient(135deg,#ff9a9e 0%,#ff6a9c 45%,#c9184a 100%);
-    min-height:100vh;display:flex;align-items:center;justify-content:center;
-    padding:16px;overflow:hidden;color:#4a0d22;position:relative;
+    min-height:100vh;min-height:100dvh;display:flex;align-items:flex-start;justify-content:center;
+    padding:24px 14px;overflow-x:hidden;color:#4a0d22;position:relative;
   }
 
   /* Trang trí nền: bóng bay bay lên */
@@ -33,7 +34,7 @@
   .flag:nth-child(3n+2){border-top-color:#8ecae6;}
   .flag:nth-child(3n){border-top-color:#fff;}
 
-  .wrap{width:100%;max-width:540px;text-align:center;position:relative;z-index:3;}
+  .wrap{width:100%;max-width:540px;text-align:center;position:relative;z-index:3;margin:auto 0;}
   .card{
     background:rgba(255,255,255,.95);border-radius:26px;padding:30px 24px;
     box-shadow:0 20px 50px rgba(120,0,40,.4);border:3px solid rgba(255,255,255,.7);
@@ -51,6 +52,10 @@
   .photo{width:100%;max-width:340px;aspect-ratio:4/3;object-fit:cover;
     border-radius:20px;display:block;margin:16px auto 4px;border:4px solid #fff;
     box-shadow:0 10px 26px rgba(201,24,74,.35);}
+  /* Ảnh ở màn kết thúc: ẩn tới khi viết xong thư mới hiện */
+  #winPhoto{display:none;margin:18px auto 24px;}
+  #winPhoto.show{display:block;animation:photoIn .7s ease both;}
+  @keyframes photoIn{from{opacity:0;transform:translateY(14px) scale(.94);}to{opacity:1;transform:none;}}
 
   .btn{font-family:"Baloo 2";background:linear-gradient(135deg,#ff8fb1,#c9184a);color:#fff;border:none;
     padding:14px 34px;font-size:1.1rem;border-radius:40px;cursor:pointer;font-weight:800;letter-spacing:.3px;
@@ -83,7 +88,11 @@
   .nextbtn{margin-top:18px;}
 
   #winMsg{font-family:"Dancing Script",cursive;font-size:1.55rem;line-height:1.55;margin:16px auto 22px;
-    max-width:420px;white-space:pre-line;color:#4a0d22;font-weight:700;text-align:left;min-height:210px;}
+    max-width:420px;white-space:pre-line;color:#4a0d22;font-weight:700;text-align:left;
+    min-height:150px;max-height:42vh;overflow-y:auto;padding-right:4px;overscroll-behavior:contain;
+    scrollbar-width:thin;scrollbar-color:#ff9ab5 transparent;}
+  #winMsg::-webkit-scrollbar{width:6px;}
+  #winMsg::-webkit-scrollbar-thumb{background:#ff9ab5;border-radius:6px;}
   .caret{display:inline-block;width:2px;height:1em;background:var(--deep);margin-left:2px;
     vertical-align:-2px;animation:blink .7s steps(1) infinite;}
   @keyframes blink{50%{opacity:0;}}
@@ -97,7 +106,25 @@
   .money{position:absolute;font-size:1.9rem;top:-40px;animation:drop linear forwards;}
   @keyframes drop{to{transform:translateY(112vh) rotate(360deg);opacity:.9;}}
 
-  @media(max-width:400px){ h1{font-size:2rem;} .name{font-size:2.4rem;} .qtext{font-size:1.15rem;} }
+  @media(max-width:480px){
+    .card{padding:24px 16px;border-radius:20px;}
+    h1{font-size:2rem;}
+    .name{font-size:2.35rem;}
+    .sub{font-size:.95rem;}
+    .qtext{font-size:1.15rem;margin-bottom:18px;}
+    .btn{padding:13px 26px;font-size:1.05rem;}
+    .ans{padding:13px;font-size:.98rem;}
+    .topbar{padding:10px 12px;}
+    .fund{font-size:1rem;}
+    .qnum{font-size:.8rem;}
+    .bigfund{font-size:1.25rem;}
+    #winMsg{font-size:1.4rem;max-height:46vh;}
+    .photo{max-width:300px;}
+  }
+  @media(max-height:560px){
+    body{align-items:flex-start;}
+    #winMsg{max-height:38vh;}
+  }
 </style>
 </head>
 <body>
@@ -133,9 +160,9 @@
     <h1>Yêu em nhiều 💖</h1>
     <div class="bigfund">Tổng quỹ yêu thương:<br><span id="finalFund">0</span>đ 🧧</div>
     <p id="winMsg"></p>
+    <img class="photo" id="winPhoto" src="1.jpeg" alt="Hai đứa mình 💕">
     <div class="winbtns">
       <button class="btn alt" id="musicBtn" onclick="toggleMusic()">🎵 Bật nhạc</button>
-      <button class="btn" onclick="location.reload()">Chơi lại 🔄</button>
     </div>
   </div>
 
@@ -191,7 +218,7 @@ const QUESTIONS = [
   {
     question: "Điều anh yêu nhất ở em là gì?",
     options: ["Nụ cười của em 😊", "Sự dịu dàng 🥰", "Là chính em 💖", "Tất cả mọi thứ ✨"],
-    correct: 2,
+    correct: 3,
     reward: 400000
   },
   {
@@ -230,16 +257,38 @@ const QUESTIONS = [
 const FINAL_MESSAGE =
   "Gửi {name} của anh,\n\n" +
   "Chúc em iuu sinh nhật thật vui, tuổi mới nhiều sức khỏe, luôn xinh đẹp và hạnh phúc bên anh. " +
-  "Cảm ơn em đã luôn ở cạnh, cùng anh đi qua từng ngày thương nhớ. Anh hứa sẽ nắm tay em thật chặt, hôm nay và cả những ngày sau này nữa nhé! 💕\n\n" +
+  "Cảm ơn em đã luôn ở cạnh, cùng anh đi qua từng ngày thương nhớ. Anh hứa sẽ nắm tay em thật chặt, hôm nay và cả những ngày sau này nữa nhé! 💕\n" +
   "Yêu em nhiều nhất trên đời 💖🌹" +
-  "\n\nLove you,\n" +
+  "\nLove you,\n" +
   "anh Rin iuu 💖";
 /* ===================================================================== */
 
 let idx = 0, fund = 0;
 function fmt(n){ return n.toLocaleString("vi-VN"); }
 
+/* ===== Xáo trộn thứ tự 9 câu đầu + xáo đáp án của chúng ===== */
+function shuffle(a){
+  for (let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function shuffleOptions(q){
+  const correctText = q.options[q.correct];   // nhớ đáp án đúng
+  shuffle(q.options);                          // xáo 4 đáp án
+  q.correct = q.options.indexOf(correctText);  // cập nhật lại vị trí đúng
+}
+function prepareQuestions(){
+  const nine = QUESTIONS.slice(0, 9);
+  const rewards = nine.map(q => q.reward);     // giữ thang lì xì tăng dần theo vị trí
+  shuffle(nine);                               // xáo thứ tự 9 câu đầu
+  nine.forEach((q, i) => { q.reward = rewards[i]; shuffleOptions(q); });
+  for (let i = 0; i < 9; i++) QUESTIONS[i] = nine[i];   // ghi đè 9 câu đầu (3 câu cuối giữ nguyên)
+}
+
 function startGame(){
+  prepareQuestions();
   document.getElementById("qtotal").textContent = QUESTIONS.length;
   document.getElementById("start").classList.add("hidden");
   document.getElementById("game").classList.remove("hidden");
@@ -312,9 +361,16 @@ function onYouTubeIframeAPIReady(){
   ytPlayer = new YT.Player('ytplayer', {
     width: '320', height: '180',
     videoId: BGM_VIDEO_ID,
-    playerVars: { autoplay:0, controls:0, loop:1, playlist:BGM_VIDEO_ID, playsinline:1, rel:0 },
+    playerVars: { autoplay:0, controls:0, loop:1, playlist:BGM_VIDEO_ID, playsinline:1, rel:0, start:25 },
     events: {
-      onReady: function(){ ytReady = true; if (wantPlay) startBgm(); }
+      onReady: function(){ ytReady = true; if (wantPlay) startBgm(); },
+      onStateChange: function(e){
+        if (e.data === 0){ try { ytPlayer.seekTo(25); ytPlayer.playVideo(); } catch(err){} return; }
+        const b = document.getElementById("musicBtn");
+        if (!b) return;
+        if (e.data === 1) b.classList.add("hidden");          // đang phát → ẩn nút
+        else if (e.data === 2) b.classList.remove("hidden");  // tạm dừng → hiện lại
+      }
     }
   });
 }
@@ -326,21 +382,17 @@ function primeBgm(){
   try {
     ytPlayer.mute();
     ytPlayer.playVideo();
-    setTimeout(function(){ try { ytPlayer.pauseVideo(); ytPlayer.seekTo(0); } catch(e){} }, 350);
+    setTimeout(function(){ try { ytPlayer.pauseVideo(); ytPlayer.seekTo(25); } catch(e){} }, 350);
   } catch(e){}
 }
 
 function startBgm(){
   if (!ytPlayer || !ytReady){ wantPlay = true; return; }
   try { ytPlayer.unMute(); ytPlayer.setVolume(55); ytPlayer.playVideo(); } catch(e){}
-  const b = document.getElementById("musicBtn");
-  if (b) b.textContent = "🔊 Đang phát — Tắt nhạc";
 }
 
 function stopBgm(){
   if (ytPlayer && ytReady){ try { ytPlayer.pauseVideo(); } catch(e){} }
-  const b = document.getElementById("musicBtn");
-  if (b) b.textContent = "🎵 Bật nhạc";
 }
 
 function toggleMusic(){
@@ -356,11 +408,20 @@ function typeLetter(el, text){
   el.innerHTML = '<span class="typed"></span><span class="caret"></span>';
   const typed = el.querySelector(".typed");
   const caret = el.querySelector(".caret");
+  const photo = document.getElementById("winPhoto");
+  if (photo) photo.classList.remove("show");   // giấu ảnh khi bắt đầu viết
   let i = 0;
   (function step(){
-    if (i >= text.length){ setTimeout(function(){ if(caret) caret.remove(); }, 1500); return; }
+    if (i >= text.length){
+      setTimeout(function(){
+        if (caret) caret.remove();
+        if (photo) photo.classList.add("show"); // viết xong thư mới hiện ảnh
+      }, 500);
+      return;
+    }
     const ch = text.charAt(i++);
     typed.textContent += ch;
+    el.scrollTop = el.scrollHeight;               // tự cuộn theo con chữ đang viết
     let delay = 42 + Math.random()*38;            // nhịp gõ hơi ngẫu nhiên cho tự nhiên
     if (ch === "\n") delay = 380;                 // xuống dòng thì nghỉ lâu hơn
     else if (".!?".indexOf(ch) > -1) delay = 300; // hết câu nghỉ một nhịp
