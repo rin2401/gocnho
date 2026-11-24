@@ -18,6 +18,9 @@
             <h2 id="time" style="text-align: center;">
                 100 ngày 0 giờ 0 phút 0 giây
             </h2>
+            <h2 id="time-2" style="text-align: center;">
+                0 ngày 0 giờ 0 phút 0 giây
+            </h2>
         </div>
         <div style="text-align:center;">
             <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4gAIUEY7VkeiKQOPwIYaYb?utm_source=generator&theme=0&autoplay=1" width="500px" height="200px" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
@@ -26,17 +29,21 @@
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
     <script>
         let firstDate = new Date('2024-02-11T00:00:00');
+        let secondDate = new Date('2024-03-24T00:00:00');
+
+        function formatElapsed(fromDate) {
+            let miliseconds = new Date() - fromDate;
+            let days = Math.floor(miliseconds / (1000 * 60 * 60 * 24));
+            let hours = Math.floor(miliseconds / (1000 * 60 * 60) % 24);
+            let minutes = Math.floor(miliseconds / (1000 * 60) % 60);
+            let seconds = Math.floor(miliseconds / 1000 % 60);
+
+            return days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây";
+        }
 
         function updateTime() {
-            let now = new Date();
-            
-            let miliseconds = now - firstDate;
-            days = Math.floor(miliseconds / (1000 * 60 * 60 * 24));
-            hours = Math.floor(miliseconds / (1000 * 60 * 60) % 24);
-            minutes =  Math.floor(miliseconds / (1000 * 60) % 60);
-            seconds = Math.floor(miliseconds / 1000 % 60)
-
-            $("#time").html(days + " ngày " + hours + " giờ " + minutes + " phút " + seconds + " giây");
+            $("#time").html(formatElapsed(firstDate));
+            $("#time-2").html(formatElapsed(secondDate));
         }
         
         updateTime();
